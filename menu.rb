@@ -1,24 +1,49 @@
 class Menu
-  attr_accessor :item
+  attr_accessor :menu_item
+  attr_accessor :name
   attr_accessor :description
   attr_accessor :price
-  attr_accessor :section
-  
-  def main_menu
-    input = ""
-    while !(input >= 1 && input <=5) do
-      puts "Please choose an option:"
-      puts "1. Print Menu"
-      puts "2. Add an item"
-      puts "3. Remove an item"
-      puts "4. Edit an item"
-      puts "5. Exit"
-      input = gets.chomp
+  attr_accessor :category
+
+  def initializer
+    @menu_item = Hash.new
+    @category = Hash.new
+    @price = 0
+  end
+
+  def print_category
+    @category.map_with_index do |key, index|
+      puts "#{index+1}. #{key}"
     end
   end
 
-  def add_item
+  def add_item 
+    response = ''
+    while response != 'y' || response != 'yes' do #Gets menu item information from user
+      puts "Please enter item name"
+      @name = gets.chomp
+      puts "Please enter item description"
+      @description = gets.chomp
+      puts "Please enter price of item"
+      @price = gets.chomp
+      
+      puts "Is this correct ((Y)es or (N)o)? \nName: #{@name} \nDescription: #{description} \nPrice: #{@price}"
+      
+      response = gets.chomp.downcase
+    end
 
+    while true do #Print category
+      if !@category.empty?
+        inputs = gets.chomp.capitalize
+        if @category.has_key?(input) #Adds the item into the correct category
+
+            break
+          end
+          puts "Please"
+      end
+      puts "What would you like to name your category?(ie. Appetizer, Dinner, Salads, Drinks)"
+      
+    end
   end
 
   def remove_item
