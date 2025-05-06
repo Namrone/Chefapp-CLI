@@ -2,12 +2,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     minitest (5.25.5)
+    titleize (1.4.1)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
   minitest
+  titleize
 
 BUNDLED WITH
    2.4.6

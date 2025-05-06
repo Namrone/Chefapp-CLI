@@ -1,15 +1,15 @@
 class Menu
   attr_accessor :name, :description, :price, :category
 
-  def initializer
+  def initialize
     @category = Hash.new
   end
 
   def add_item (name, description, price, cat_name) #Adds the new menu item into corresponding category or forms new category
     if @category.has_key?(cat_name)
-      @category[cat_name] << {:item => item, :description => description, :price => price}
+      @category[cat_name] << {:item => name, :description => description, :price => price}
     else
-      @category[cat_name] = [{:item => item, :description => description, :price => price}]
+      @category[cat_name] = [{:item => name, :description => description, :price => price}]
     end
   end
 
@@ -26,7 +26,14 @@ class Menu
   end
 
   def print_menu
-    @category
+    @category.each do |cat_name, menu_items|
+      puts "\n=============================="
+      puts cat_name
+      puts "=============================="
+      menu_items.each do |item|
+        puts "#{item[:item]} ----- #{item[:description]} ------  #{item[:price]}"
+      end
+    end
   end
 
   def print_edit_choice
