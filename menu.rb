@@ -11,12 +11,6 @@ class Menu
     @price = 0
   end
 
-  def print_category
-    @category.map_with_index do |key, index|
-      puts "#{index+1}. #{key}"
-    end
-  end
-
   def add_item 
     response = ''
     while response != 'y' || response != 'yes' do #Gets menu item information from user
@@ -32,14 +26,30 @@ class Menu
       response = gets.chomp.downcase
     end
 
-    while true do #Print category
+    while true do #Prompts user to choose a category and stores the item into it
       if !@category.empty?
-        inputs = gets.chomp.capitalize
-        if @category.has_key?(input) #Adds the item into the correct category
+        puts "Would you like to: \n1. Enter the item into an existing category \n2. Add a new category"
+        choice = gets.chomp.to_i
 
+        case choice
+        when 1 #To enter item into an existing category
+          puts "Please choose from the following existing categories: #{@category.keys}"
+          cat_name = gets.chomp.titleize
+          if @category.has_key?(cat_name) 
+            @category[cat_name] << {:item => @item, :description => @description, :price => @price}
             break
           end
-          puts "Please"
+        end
+        when 2 #To add a new category and add item into it
+          print "Please enter the new category name: "
+          cat_name = gets.chomp.titleize
+          if !@category.has_key?(cat_name)
+            @category[cat_name] = [{:item => @item, :description => @description, :price => @price}]
+          end
+          break
+        end
+
+        puts "Invalid Option. Please try again"
       end
       puts "What would you like to name your category?(ie. Appetizer, Dinner, Salads, Drinks)"
       
