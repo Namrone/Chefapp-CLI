@@ -13,15 +13,11 @@ class Menu
     end
   end
 
-  def remove_item
-
+  def remove_item(item)
+    
   end
 
   def edit_item
-
-  end
-
-  def create_category
 
   end
 

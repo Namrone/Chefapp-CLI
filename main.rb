@@ -28,7 +28,7 @@ def prompt_add(menu)
 
     case
     when choice == '1' && !menu.category.empty? #Prompts user to choose from exisiting categories and adds item into it
-      puts "\nPlease choose from the following existing categories: #{@category.keys}"
+      puts "\nPlease choose from the following existing categories: #{menu.category.keys}"
       cat_name = gets.chomp.titleize
       return if cat_name == 'Exit'
 
@@ -54,6 +54,37 @@ def prompt_add(menu)
   end
 end
 
+def prompt_remove(menu) #Display all existing items names and deletes the chosen item from menu
+  if menu.category.empty?
+    puts "\nThe menu is empty. Please add an item first..."
+    return
+  end
+
+  items_list = [] #collect all the item names 
+  menu.category.each do |cat_name, menu_items|
+    menu_items.each do |item|
+      items_list << item[:item]
+    end
+  end  
+
+  loop do
+    print "\nWhich item would you like to delete: "
+    items_list.each {|item| print "|-#{item}-|"}
+    puts "\n"
+
+    choice = gets.chomp.titleize
+    return if choice == 'Exit'
+
+    if items_list.include?(choice)
+      menu.remove_item(choice)
+      puts "Removed item from menu. Returning to main menu..."
+      return
+    end
+
+    puts "Invalid entry. Try again or exit"
+  end
+end
+
 def start_menu(menu)
   loop do # Prints option menu and loops until user input is a valid input
     puts "\nPlease choose an option (#1-5). You may type 'exit' anytime to return to main menu:"
@@ -65,12 +96,12 @@ def start_menu(menu)
     input = gets.chomp.to_i
 
     case input
-    when 1
+    when 1 #Prints current menu
       menu.print_menu()
     when 2 #Add item to menu
       prompt_add(menu)
     when 3
-
+      prompt_remove(menu)
     when 4
 
     when 5
