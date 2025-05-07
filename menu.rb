@@ -13,8 +13,8 @@ class Menu
     end
   end
 
-  def remove_item(item)
-    
+  def remove_item(cat_name, item)
+    @category[cat_name].delete_if {|hash| hash[:item] == item}
   end
 
   def edit_item

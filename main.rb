@@ -60,23 +60,23 @@ def prompt_remove(menu) #Display all existing items names and deletes the chosen
     return
   end
 
-  items_list = [] #collect all the item names 
+  items_list = {} #collect all the item names and category they're under
   menu.category.each do |cat_name, menu_items|
     menu_items.each do |item|
-      items_list << item[:item]
+      items_list.store(cat_name, item[:item])
     end
   end  
 
   loop do
     print "\nWhich item would you like to delete: "
-    items_list.each {|item| print "|-#{item}-|"}
+    items_list.each {|key,value| print "|-#{value}-|"}
     puts "\n"
 
     choice = gets.chomp.titleize
     return if choice == 'Exit'
 
     if items_list.include?(choice)
-      menu.remove_item(choice)
+      menu.remove_item(items_list.key(choice), choice)
       puts "Removed item from menu. Returning to main menu..."
       return
     end
@@ -112,6 +112,6 @@ def start_menu(menu)
   end
 end
 
-menu = Menu.new
+#menu = Menu.new
 
-start_menu(menu)
+#start_menu(menu)
