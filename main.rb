@@ -34,7 +34,7 @@ def prompt_add(menu)
 
       if menu.category.has_key?(cat_name)
         menu.add_item(name, description, price, cat_name)
-        puts "Item added, returning to main menu..."
+        puts "~~~~Item added, returning to main menu...~~~~"
         return
       end
 
@@ -45,18 +45,24 @@ def prompt_add(menu)
 
       if !menu.category.has_key?(cat_name)
         menu.add_item(name, description, price, cat_name)
-        puts "Item added, returning to main menu..."
+        puts "~~~~Item added, returning to main menu...~~~~"
         return
       end
     end
 
-    puts "Invalid Option, please try again."
+    puts "~~~~Invalid Option, please try again.~~~~"
   end
 end
 
+#
+#
+# ~~~~~~~~~Still need to code a check for add item to prevent duplicates~~~~~~~~~~~~~
+#
+#
+
 def prompt_remove(menu) #Display all existing items names and deletes the chosen item from menu
   if menu.category.empty?
-    puts "\nThe menu is empty. Please add an item first..."
+    puts "\n~~~~The menu is empty. Please add an item first...~~~~"
     return
   end
 
@@ -77,20 +83,104 @@ def prompt_remove(menu) #Display all existing items names and deletes the chosen
 
     if items_list.include?(choice)
       menu.remove_item(items_list.key(choice), choice)
-      puts "Removed item from menu. Returning to main menu..."
+      puts "~~~~Removed item from menu. Returning to main menu...~~~~"
       return
     end
 
-    puts "Invalid entry. Try again or exit"
+    puts "~~~~Invalid entry. Try again or exit~~~~"
   end
 end
 
 def prompt_edit(menu)
-  puts "\nWhat would you like to edit:"
-  puts "1. Category name"
-  puts "2. Item name"
-  puts "3. Item description"
-  Puts "4. Item price"
+  menu.print_menu
+  loop do
+    puts "\nWhat would you like to edit (1-2):"
+    puts "1. Category name"
+    puts "2. Item Information"
+    puts "3. Display menu again"
+    choice = gets.chomp.downcase
+    return if choice == 'exit'
+
+    case choice
+    when '1' #Displays all current categories and receives the change from user and applies change to menu
+      loop do
+        print "Which category would you like to change: "
+        to_edit = gets.chomp.titleize
+        return if to_edit == 'Exit'
+
+        if menu.category.has_key?(to_edit)
+          print "Type the new category name of #{to_edit}: "
+          edited = gets.chomp.titleize
+          return if edited == 'Exit'
+
+          puts "\nIs this correct (Y)es or (N)o -> #{edited}"
+          confirm = gets.chomp.downcase
+          return if confirm == 'exit'
+
+          if confirm == 'y' || confirm == 'yes'
+            menu.edit_item(to_edit, edited)
+            puts "~~~~Category name edited. Returning to main menu...~~~~"
+            return
+          end
+        end
+        puts "~~~~Not a valid option please try again.~~~~"
+      end
+
+    when '2' #Displays all item information and receives the change from user and applies change to the targeted item
+      loop do
+        print "What category is the item you'd like to change under?: "
+        cat_name = gets.chomp.titleize
+        return if cat_name == 'Exit'
+
+        while menu.category.has_key?(cat_name) do
+          print "\nThese are the items in #{cat_name}: "
+          menu.category[cat_name].each {|item| print "#{item} "}
+
+          print "\nType the item name that you'd like to change: "
+          item_request = gets.chomp.capitalize
+          return if item_request == 'Exit'
+
+          
+          if menu.category[cat_name].any? {|item| item[:item] == item_request} #Makes sure user entry is an actual item within menu
+            puts "What would you like to change from #{item_request} (1-3)? \n1. The name \n2. The description \n3. The price"
+            choice = gets.chomp.downcase
+            return if choice == 'exit'
+
+            case choice
+            when '1'
+              print "Enter the new name of the item: "
+              choice = :item
+
+            when '2'
+              print "Enter the new description of the item: "
+              choice = :description
+            
+            when '3'
+              print "Enter the new price of the item: "
+              choice = :price
+            end
+            edited = gets.chomp.titleize
+            return if edited == 'Exit'
+
+            print "Is this correct -> #{edited}. (Y)es or (N)o"
+            confirmed = gets.chomp.downcase
+            return if confirmed == 'exit'
+            edited_hash = {choice => edited}
+            if confirmed == 'y' || confirmed == 'yes'
+              menu.edit_item(choice, edited_hash)
+            end
+          end
+          puts "~~~~Not a valid option please try again.~~~~"
+        end
+        puts "~~~~Not a valid option please try again.~~~~"
+      end
+      
+    when '3'
+      menu.print_menu
+    else
+      puts "~~~~Not a valid option please try again.~~~~"
+    end
+  end
 end
 
 def start_menu(menu)
@@ -115,7 +205,7 @@ def start_menu(menu)
     when 5
       return
     else
-      puts "Not a valid option, please enter a value 1-5"
+      puts "~~~~Not a valid option, please enter a value 1-5~~~~"
     end
   end
 end
