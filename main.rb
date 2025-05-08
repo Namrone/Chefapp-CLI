@@ -19,6 +19,7 @@ def prompt_add(menu)
     
     response = gets.chomp.downcase
     return if response == 'exit'
+
   end
 
   loop do #Prompts user to choose a category and stores the item into it
@@ -32,7 +33,11 @@ def prompt_add(menu)
       cat_name = gets.chomp.titleize
       return if cat_name == 'Exit'
 
-      if menu.category.has_key?(cat_name)
+      if menu.category.key?(cat_name)
+        if menu.category[cat_name].any? {|item| item[:item] == name} #Prevents duplicate item in the same category
+          puts "\n~~~~That item already exists in this category. Either 'exit' or add it into another category~~~~"
+          next
+        end
         menu.add_item(name, description, price, cat_name)
         puts "~~~~Item added, returning to main menu...~~~~"
         return
@@ -54,37 +59,40 @@ def prompt_add(menu)
   end
 end
 
-#
-#
-# ~~~~~~~~~Still need to code a check for add item to prevent duplicates~~~~~~~~~~~~~
-#
-#
-
 def prompt_remove(menu) #Display all existing items names and deletes the chosen item from menu
   if menu.category.empty?
     puts "\n~~~~The menu is empty. Please add an item first...~~~~"
     return
   end
 
-  items_list = {} #collect all the item names and category they're under
+  items_list = [] #collect all the item names and category they're under
   menu.category.each do |cat_name, menu_items|
     menu_items.each do |item|
-      items_list.store(cat_name, item[:item])
+      items_list << {cat_name => item[:item]}
     end
   end  
 
   loop do
     print "\nWhich item would you like to delete: "
-    items_list.each {|key,value| print "|-#{value}-|"}
+    items_list.each {|hash| print "|-#{hash}-|"}
     puts "\n"
 
     choice = gets.chomp.titleize
     return if choice == 'Exit'
 
-    if items_list.include?(choice)
-      menu.remove_item(items_list.key(choice), choice)
-      puts "~~~~Removed item from menu. Returning to main menu...~~~~"
-      return
+    items_list.each do |hash|  #Locates the category which the item is under and removes item from that category
+      if hash.has_value?(choice)
+        print "Delete #{choice} from '#{hash.keys}' category? (Y)es or (N)o: "
+        confirmed = gets.chomp.downcase
+        return if confirmed == 'exit'
+        cat_name = hash.key(choice)
+
+        if confirmed == 'y' || confirmed == 'yes'
+          menu.remove_item(cat_name, choice)
+          puts "~~~~Removed item from menu. Returning to main menu...~~~~"
+          return
+        end
+      end
     end
 
     puts "~~~~Invalid entry. Try again or exit~~~~"
@@ -92,6 +100,11 @@ def prompt_remove(menu) #Display all existing items names and deletes the chosen
 end
 
 def prompt_edit(menu)
+  if menu.category.empty?
+    puts "\n~~~~The menu is empty. Please add an item first...~~~~"
+    return
+  end
+
   menu.print_menu
   loop do
     puts "\nWhat would you like to edit (1-2):"
@@ -109,7 +122,7 @@ def prompt_edit(menu)
         return if to_edit == 'Exit'
 
         if menu.category.has_key?(to_edit)
-          print "Type the new category name of #{to_edit}: "
+          print "Type the new category name of '#{to_edit}': "
           edited = gets.chomp.titleize
           return if edited == 'Exit'
 
@@ -137,7 +150,7 @@ def prompt_edit(menu)
           menu.category[cat_name].each {|item| print "#{item} "}
 
           print "\nType the item name that you'd like to change: "
-          item_request = gets.chomp.capitalize
+          item_request = gets.chomp.titleize
           return if item_request == 'Exit'
 
           
@@ -162,6 +175,12 @@ def prompt_edit(menu)
             edited = gets.chomp.titleize
             return if edited == 'Exit'
 
+            if choice == :item && menu.category[cat_name].any? {|item| item[:item] == edited}#Makes sure no duplicate items in the same category
+              puts "\n~~~~That item already exists in this category. Either 'exit' or pick a different name~~~~"
+              next
+            end
+
+            edited = edited.to_f.ceil(2) if choice == :price
             print "Is this correct -> #{edited}. (Y)es or (N)o"
             confirmed = gets.chomp.downcase
             return if confirmed == 'exit'
@@ -169,6 +188,8 @@ def prompt_edit(menu)
 
             if confirmed == 'y' || confirmed == 'yes' #Makes the change into menu
               menu.edit_item(cat_name, edited_choices)
+              puts "~~~~Item has been edited. Returning to main menu...~~~~"
+              return
             end
           end
           puts "~~~~Not a valid option please try again.~~~~"
@@ -211,6 +232,6 @@ def start_menu(menu)
   end
 end
 
-#menu = Menu.new
+menu = Menu.new
 
-#start_menu(menu)
+start_menu(menu)
