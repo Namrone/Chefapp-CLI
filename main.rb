@@ -60,7 +60,7 @@ def prompt_add(menu)
 end
 
 def prompt_remove(menu) #Display all existing items names and deletes the chosen item from menu
-  if menu.category.empty?
+  if menu.category.empty? || menu.category.values.flatten.empty?
     puts "\n~~~~The menu is empty. Please add an item first...~~~~"
     return
   end
@@ -100,7 +100,7 @@ def prompt_remove(menu) #Display all existing items names and deletes the chosen
 end
 
 def prompt_edit(menu)
-  if menu.category.empty?
+  if menu.category.empty? || menu.category.values.flatten.empty?
     puts "\n~~~~The menu is empty. Please add an item first...~~~~"
     return
   end
@@ -213,18 +213,18 @@ def start_menu(menu)
     puts "3. Remove an item"
     puts "4. Edit an item"
     puts "5. Exit"
-    input = gets.chomp.to_i
+    input = gets.chomp
 
     case input
-    when 1 #Prints current menu
+    when '1' #Prints current menu
       menu.print_menu()
-    when 2 #Add item to menu
+    when '2' #Add item to menu
       prompt_add(menu)
-    when 3 #Remove selected item from menu
+    when '3' #Remove selected item from menu
       prompt_remove(menu)
-    when 4 #Prompts user to choose which item to edit and what part to edit and asserts the changes
+    when '4' #Prompts user to choose which item to edit and what part to edit and asserts the changes
       prompt_edit(menu)
-    when 5
+    when '5'
       return
     else
       puts "~~~~Not a valid option, please enter a value 1-5~~~~"
