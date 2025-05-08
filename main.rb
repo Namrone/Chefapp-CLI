@@ -165,9 +165,10 @@ def prompt_edit(menu)
             print "Is this correct -> #{edited}. (Y)es or (N)o"
             confirmed = gets.chomp.downcase
             return if confirmed == 'exit'
-            edited_hash = {choice => edited}
-            if confirmed == 'y' || confirmed == 'yes'
-              menu.edit_item(choice, edited_hash)
+            edited_choices = [item_request, choice, edited]
+
+            if confirmed == 'y' || confirmed == 'yes' #Makes the change into menu
+              menu.edit_item(cat_name, edited_choices)
             end
           end
           puts "~~~~Not a valid option please try again.~~~~"
@@ -210,6 +211,6 @@ def start_menu(menu)
   end
 end
 
-menu = Menu.new
+#menu = Menu.new
 
-start_menu(menu)
+#start_menu(menu)

@@ -17,8 +17,17 @@ class Menu
     @category[cat_name].delete_if {|hash| hash[:item] == item}
   end
 
-  def edit_item
-
+  def edit_item(cat_name, edited)
+    if edited.class == String
+      @category[edited] = @category.delete(cat_name)
+    else
+      @category[cat_name].each do |item|
+        if item[:item] == edited[0]
+          edited[1] == :price ? item[edited[1]] = edited[2].to_f.ceil(2) : item[edited[1]] = edited[2]
+          break
+        end
+      end
+    end
   end
 
   def print_menu

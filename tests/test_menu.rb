@@ -14,4 +14,12 @@ class TestMenu < Minitest::Test
     menu.remove_item('Dinner', 'Garlic Bread')
     assert_equal ({"Dinner"=>[]}), menu.category, "Menu item was not deleted"
   end
+
+  def test_edit_item
+    menu = Menu.new
+    menu.add_item('Garlic Bread', 'Garlicy crunchy bread', 5.50, 'Dinner')
+    edited_choices = ['Garlic Bread', :price, 6]
+    menu.edit_item('Dinner', edited_choices)
+    assert_equal ({:item => 'Garlic Bread', :description => 'Garlicy crunchy bread', :price => 6.00}), menu.category['Dinner'][0], "Garlic bread was not edited"
+  end
 end
