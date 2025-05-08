@@ -85,6 +85,14 @@ def prompt_remove(menu) #Display all existing items names and deletes the chosen
   end
 end
 
+def prompt_edit(menu)
+  puts "\nWhat would you like to edit:"
+  puts "1. Category name"
+  puts "2. Item name"
+  puts "3. Item description"
+  Puts "4. Item price"
+end
+
 def start_menu(menu)
   loop do # Prints option menu and loops until user input is a valid input
     puts "\nPlease choose an option (#1-5). You may type 'exit' anytime to return to main menu:"
@@ -100,10 +108,10 @@ def start_menu(menu)
       menu.print_menu()
     when 2 #Add item to menu
       prompt_add(menu)
-    when 3
+    when 3 #Remove selected item from menu
       prompt_remove(menu)
-    when 4
-
+    when 4 #Prompts user to choose which item to edit and what part to edit and asserts the changes
+      prompt_edit(menu)
     when 5
       return
     else
@@ -112,6 +120,6 @@ def start_menu(menu)
   end
 end
 
-#menu = Menu.new
+menu = Menu.new
 
-#start_menu(menu)
+start_menu(menu)

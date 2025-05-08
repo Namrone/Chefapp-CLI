@@ -31,8 +31,4 @@ class Menu
       end
     end
   end
-
-  def print_edit_choice
-
-  end
 end
